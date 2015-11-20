@@ -30,11 +30,12 @@ class Sensor extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('descripcion', 'required'),
+			array('descripcion', 'required', 'except' => 'buscar'),
 			array('minimo, maximo', 'numerical', 'integerOnly'=>true),
 			array('descripcion', 'length', 'max'=>45),
-			// The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
+                    
+			array('idsensor', 'required', 'on' => 'buscar'),
+                    
 			array('idsensor, descripcion, minimo, maximo', 'safe', 'on'=>'search'),
 		);
 	}
@@ -57,7 +58,7 @@ class Sensor extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'idsensor' => 'Idsensor',
+			'idsensor' => 'Sensor',
 			'descripcion' => 'Descripcion',
 			'minimo' => 'Minimo',
 			'maximo' => 'Maximo',
@@ -108,7 +109,14 @@ class Sensor extends CActiveRecord
                  array('order' => 'idsensor'));
             $list = CHtml::listData($models, 
                 'idsensor', 'descripcion');
-            
             return $list;
+        }
+        
+        static function getSensorValores($idsensor = 1){
+            $criteria=new CDbCriteria;
+            $criteria->addCondition("t.sensor_idsensor=$idsensor");
+            $criteria->limit = 7;   
+            $model = Valores::model()->findAll($criteria);
+            return $model;
         }
 }

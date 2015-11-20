@@ -26,21 +26,26 @@ class SiteController extends Controller
 	 * when an action is not explicitly requested by users.
 	 */
 	public function actionIndex()
-	{
-            
-                $modelSensor = Sensor::model()->findAll();
-            
-                $criteria=new CDbCriteria;
-                $criteria->addCondition('t.sensor_idsensor=1');
-                //$criteria->order = "desc";
-                $criteria->limit = 7;
-                
-                $model = Valores::model()->findAll($criteria);
-            
-            
+	{     
+                $modelSensor = new Sensor();
+                $modelSensor->setScenario('buscar');
+                $model = null;
+
+                $idSensor = null;
+                if(isset($_POST['Sensor']))
+		{
+                    $modelSensor->attributes=$_POST['Sensor'];
+
+                    if($modelSensor->validate()){
+                        $model = Sensor::model()->getSensorValores($modelSensor->idsensor);
+                        $idSensor = $modelSensor->idsensor;
+                    }
+                }
+
 		$this->render('index',array(
 			'model'=>$model,
-                        'modelSensor'=>$modelSensor
+                        'modelSensor'=>$modelSensor,
+                        'idSensor' => $idSensor,
 		));
 	}
 

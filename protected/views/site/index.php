@@ -1,33 +1,41 @@
-<div class="form">
 
-<?php $form=$this->beginWidget('CActiveForm', array(
-	'id'=>'certificado-form',
-	// Please note: When you enable ajax validation, make sure the corresponding
-	// controller action is handling ajax validation correctly.
-	// There is a call to performAjaxValidation() commented in generated controller code.
-	// See class documentation of CActiveForm for details on this.
-	'enableAjaxValidation'=>false,
-)); ?>
-        
-        <div class="form-group">
-            <b>Certificado de alumno regular: </b>
-            <i>Certifica la calidad de ser alumno regular en la Escuela Naval "Arturo Prat".</i>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            
+            <h3>Visualizador de sensores</h3>
+            
+            <div class="form">
+                <?php $form=$this->beginWidget('CActiveForm', array(
+                        'id'=>'certificado-form',
+                        // Please note: When you enable ajax validation, make sure the corresponding
+                        // controller action is handling ajax validation correctly.
+                        // There is a call to performAjaxValidation() commented in generated controller code.
+                        // See class documentation of CActiveForm for details on this.
+                        'enableAjaxValidation'=>false,
+                )); ?>
+                        <?php //echo $form->errorSummary($modelSensor); ?>
+
+                        <div class="input-group">
+                            <?php echo $form->dropDownList($modelSensor, 'idsensor', Sensor::model()->getListSensor(),
+                                        array('empty'=>'seleccione sensor', 'class'=>'form-control',
+                                            'options'=> array($idSensor=>array('selected'=>'selected')) )); ?>
+                            <span class="input-group-btn">
+                                <?php echo CHtml::submitButton('Seleccionar', array('class'=>'btn btn-default')); ?>
+                            </span>
+                        </div>
+
+                        <div class="form-group">
+                                <?php echo $form->error($modelSensor,'idsensor', array('class'=>'alert alert-danger')); ?>
+                        </div>
+
+                <?php $this->endWidget(); ?>
+                </div>
         </div>
-    
-	<div class="form-group">
-		<?php echo $form->labelEx($modelSensor,'idsensor', array('class'=>'control-label')); ?>
-                <?php echo $form->dropDownList($modelSensor, 'idsensor', Sesor::model()->getListSensor(),
-                        array('empty'=>'seleccione sensor', 'class'=>'form-control')); ?>
-		<?php echo $form->error($modelSensor,'idsensor', array('class'=>'alert alert-danger')); ?>
-	</div>
+    </div>
+</div>
 
-	<div class="form-group">
-		<?php echo CHtml::submitButton($model->isNewRecord ? 'Solicitar' : 'Solicitar', array('class'=>'btn btn-primary')); ?>
-	</div>
 
-<?php $this->endWidget(); ?>
-
-</div><!-- form -->
 
 
 
@@ -39,7 +47,7 @@
 
 <script>
     var lineChartData = {       
-        labels : [<?php foreach($model as $m){ echo "'".$m->fecha."',";}?>],
+        labels : [<?php if(!empty($model)){ foreach($model as $m){ echo "'".$m->fecha."',";}}?>],
             datasets : [
                 {
                 label: "My First dataset",
@@ -49,7 +57,7 @@
                 pointStrokeColor : "#fff",
                 pointHighlightFill : "#fff",
                 pointHighlightStroke : "rgba(220,220,220,1)",
-                data : [<?php foreach($model as $m){ echo "'".$m->valor."',";}?>]
+                data : [<?php if(!empty($model)){ foreach($model as $m){ echo "'".$m->valor."',";}}?>]
                 },
             ]
     }
